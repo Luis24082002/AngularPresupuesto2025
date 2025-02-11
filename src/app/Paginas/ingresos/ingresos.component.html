@@ -1,4 +1,13 @@
 <h2>Gestion de Ingresos</h2>
-<app-frm-ingresos (ingresoAgregado)= "agregarIngreso($event)" > </app-frm-ingresos>
-<app-listado-ingresos [ingresos]= "ingresos()" > </app-listado-ingresos>
-
+<app-frm-ingresos
+  [ingresoParaEditar]="ingresoParaEditar()"
+  (ingresoAgregado)="agregarIngreso($event)"
+  (editame)="editandolo($event)"
+>
+</app-frm-ingresos>
+<app-listado-ingresos
+  [ingresos]="ingresos()"
+  (ingresoSeleccionado)="seleccionIngreso($event)"
+  (idEliminado)="eliminaIngreso($event)"
+>
+</app-listado-ingresos>

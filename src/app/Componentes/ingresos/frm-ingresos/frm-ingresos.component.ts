@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Output, output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, } from '@angular/core';
 import { Iingresos } from '../../../interfaces/iingresos';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-frm-ingresos',
@@ -11,23 +12,32 @@ import { CommonModule } from '@angular/common';
   styleUrl: './frm-ingresos.component.css',
 })
 export class FrmIngresosComponent {
-  @Output() ingresoAgregado = new EventEmitter<Iingresos>();
+  
 
-  ingresos: Iingresos[] = [];
+  @Input() ingresoParaEditar:Iingresos|null = null;
+  @Output() ingresoAgregado = new EventEmitter<Iingresos>();
+  @Output() editame = new EventEmitter<Iingresos>();
+
+  ingresos: Iingresos[]=[];
 
   nuevoingreso: Iingresos = { id: '', nombre: '', fecha: '', monto: 0 };
-  agregaingreso() {
-    const item = this.ingresos.find((item) => item.id == this.nuevoingreso.id);
-    if (item) {
-      const indice = this.ingresos.indexOf(item);
-      this.ingresos.splice(indice, 1, { ...this.nuevoingreso });
-      alert('ELEMENTO ACTUALIZADO');
-      this.limpiar();
-      return;
-    }
-    //this.ingresos.push({ ...this.nuevoingreso });
-    this.ingresoAgregado.emit({ ...this.nuevoingreso });
-    alert('INGRESO AGREGADO');
+
+  ngOnChanges(){
+      if (this.ingresoParaEditar){
+          this.nuevoingreso = {...this.ingresoParaEditar};
+      }
+  }
+
+  agregaIngreso() {
+   if (this.nuevoingreso.id==""){
+    this.ingresoAgregado.emit({...this.nuevoingreso});
+    alert("Ingreso Agregado")
+   }else{
+    this.editame.emit({...this.nuevoingreso})
+     this.ingresoParaEditar =null;
+   }
+    
+   
     this.limpiar();
   }
   limpiar() {
@@ -45,4 +55,7 @@ export class FrmIngresosComponent {
   eliminar(id: string) {
     this.ingresos = this.ingresos.filter((item) => item.id !== id);
   }
+
 }
+
+
